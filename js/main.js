@@ -4,8 +4,9 @@ require([
     "esri/views/MapView",
     "esri/layers/FeatureLayer",
     "esri/widgets/Legend",
-    "esri/widgets/Expand"
-], function (esriConfig, Map, MapView, FeatureLayer, Legend, Expand) {
+    "esri/widgets/Expand",
+    "esri/widgets/FeatureTable"
+], function (esriConfig, Map, MapView, FeatureLayer, Legend, Expand, FeatureTable) {
     // set API key
     esriConfig.apiKey = "AAPKeb82c116636342a289d5172515b76b9d6Wz_Fi24SspiTAlNJq7OihpKOKxxxsU7_0FN8BM8OfEeAzRnknPrfq9hVRTSuyNQ"
 
@@ -239,6 +240,76 @@ require([
         sqlString = sqlString.substr(0, lastStrIndex);
 
         return sqlString;
+    }
+
+    // Adding the FeatureTable widget
+    view.when(() => {
+        // Create the feature table
+        const featureTable = new FeatureTable({
+            view: view, // required for feature highlight to work
+            layer: featureLayer,
+            // Autocast the FieldColumnConfigs
+            // These are the fields that will display as columns in the FeatureTable
+            fieldConfigs: [{
+                name: "Name",
+                label: "Business Name",
+                direction: "asc"
+            },
+            {
+                name: "Address",
+                label: "Address"
+            },
+            {
+                name: "Website",
+                label: "Website"
+            },
+            {
+                name: "Industry",
+                label: "Industry"
+            },
+            {
+                name: "Phone",
+                label: "Phone number"
+            }
+            ],
+            container: document.getElementById("tableDiv")
+        });
+
+        // Query for the selected features and zoom to them
+        // automatically
+        featureTable.on('selection-change', zoomToSelectedFeatures);
+    });
+
+    // This function zooms into the selected features based off the records
+    // selected or deselected from the FeatureTable
+    function zoomToSelectedFeatures(event) {
+        // check if a row is selected or deselected
+        if (event.added.length > 0) {
+            // row was selected
+            currentSelectedOIDs.push(event.added[0].objectId);
+        } else {
+            // row was deselected - remove the objectid from
+            // the currentSelectedOIDs
+            event.removed.forEach((feature, index) => {
+                let deleteIndex = currentSelectedOIDs.indexOf(event.removed[index].objectId);
+                currentSelectedOIDs.splice(deleteIndex, 1);
+            });
+        }
+
+        // only perform the query and zoom to the extent
+        // if the currentSelectedOIDs is greater than 0.
+        if (currentSelectedOIDs.length > 0) {
+            const query = featureLayer.createQuery();
+            query.objectIds = currentSelectedOIDs;
+            query.returnGeometry = true;
+
+            // Client-side querying is not being used here as currently, the FeatureTable
+            // does not have the ability to only restrict records to features within
+            // the current view extent. This is currently in development.
+            featureLayer.queryFeatures(query).then((results) => {
+                view.goTo(results.features);
+            });
+        }
     }
 
 });
