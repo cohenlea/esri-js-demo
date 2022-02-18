@@ -1,5 +1,26 @@
-div#viewDiv {
-  min-height: 700px;
+html,
+body,
+#viewDiv {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+a {
+  color: #ff2ecb;
+}
+
+#infoDiv {
+  padding: 10px;
+}
+#infoDiv #legendDiv {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.esri-popup__footer .esri-popup__button {
+  font-size: 16px;
+  font-weight: 460;
 }
 
 /*# sourceMappingURL=main.css.map */

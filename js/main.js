@@ -2,8 +2,10 @@ require([
     "esri/config",
     "esri/Map",
     "esri/views/MapView",
-    "esri/layers/FeatureLayer"
-], function (esriConfig, Map, MapView, FeatureLayer) {
+    "esri/layers/FeatureLayer",
+    "esri/widgets/Legend",
+    "esri/widgets/Expand"
+], function (esriConfig, Map, MapView, FeatureLayer, Legend, Expand) {
     // set API key
     esriConfig.apiKey = "AAPKeb82c116636342a289d5172515b76b9d6Wz_Fi24SspiTAlNJq7OihpKOKxxxsU7_0FN8BM8OfEeAzRnknPrfq9hVRTSuyNQ"
 
@@ -71,4 +73,20 @@ require([
         // Palermo: 12.594538,37.686469,13.786554,38.271004
         // East Bay: -122.381408,37.772258,-122.149322,37.919742
     });
+
+    // Add Legend widget
+    const legend = new Legend({
+        view: view,
+        container: "legendDiv"
+    });
+
+    // Add Expand widget
+    const expand = new Expand({
+        view: view,
+        content: document.getElementById("infoDiv"),
+        expanded: true
+    });
+
+    view.ui.add(expand, "top-right");
+
 });
