@@ -39,16 +39,129 @@ require([
         }]
     };
 
+    // Unique Value Renderer to apply on the FeatureLayer
+    const uvrRenderer = {
+        type: "unique-value", // autocasts as new UniqueValueRenderer()
+        field: "Industry",
+        defaultSymbol: {
+            type: "simple-marker",
+            color: "#b2b2b2", // light-gray
+            size: "10px",
+            outline: null
+        },
+        uniqueValueInfos: [{
+            value: "accessories_&_clothing",
+            label: "Accessories & Clothing",  // labels will appear on the Legend widget
+            symbol: {
+                type: "simple-marker",
+                color: "#d9351a",
+                size: "10px",
+                outline: null
+            }
+        }, {
+            value: "arts_&_culture",
+            label: "Arts & Culture",
+            symbol: {
+                type: "simple-marker",
+                color: "#ffc730",
+                size: "10px",
+                outline: null
+            }
+        }, {
+            value: "auto",
+            label: "Auto",
+            symbol: {
+                type: "simple-marker",
+                color: "#144d59",
+                size: "10px",
+                outline: null
+            }
+        }, {
+            value: "food_+_beverage",
+            label: "Food + Beverage",
+            symbol: {
+                type: "simple-marker",
+                color: "#2c6954",
+                size: "10px",
+                outline: null
+            }
+        }, {
+            value: "hair_body_&_beauty",
+            label: "Hair, Body & Beauty",
+            symbol: {
+                type: "simple-marker",
+                color: "#ed9310",
+                size: "10px",
+                outline: null
+            }
+        }, {
+            value: "health_&_medicine",
+            label: "Health & Medicine",
+            symbol: {
+                type: "simple-marker",
+                color: "#8c213f",
+                size: "10px",
+                outline: null
+            }
+        }, {
+            value: "it_&_tech_hardware+software_",
+            label: "IT & Tech",
+            symbol: {
+                type: "simple-marker",
+                color: "#102432",
+                size: "10px",
+                outline: null
+            }
+        }, {
+            value: "legal",
+            label: "Legal",
+            symbol: {
+                type: "simple-marker",
+                color: "#a64f1b",
+                size: "10px",
+                outline: null
+            }
+        }, {
+            value: "management",
+            label: "Management",
+            symbol: {
+                type: "simple-marker",
+                color: "#18382e",
+                size: "10px",
+                outline: null
+            }
+        }, {
+            value: "non_profit_organization",
+            label: "Non Profit Organization",
+            symbol: {
+                type: "simple-marker",
+                color: "#b31515",
+                size: "10px",
+                outline: null
+            }
+        }, {
+            value: "religious",
+            label: "Religious",
+            symbol: {
+                type: "simple-marker",
+                color: "#4a0932",
+                size: "10px",
+                outline: null
+            }
+        }]
+    };
+
     // Initialize FeatureLayer
     const featureLayer = new FeatureLayer({
         title: "Black-owned Businesses",
         url: url,
         copyright: "BGMAPP",
-        popupTemplate: template
+        popupTemplate: template,
+        renderer: uvrRenderer
     })
 
     const map = new Map({
-        basemap: "arcgis-light-gray",
+        basemap: "arcgis-dark-gray",
         // basemap: "dark-gray" // no api-key needed
         layers: [featureLayer]
     });
@@ -57,10 +170,6 @@ require([
         map: map,
         extent: {
             // Bay Area extent:
-            // xmin: 12.6,
-            // ymin: 37.7,
-            // xmax: 13.8,
-            // ymax: 38.3,
             xmin: -122.38,
             ymin: 37.18,
             xmax: -122.15,
@@ -69,9 +178,6 @@ require([
         },
         // center: [-122, 38],
         zoom: 10
-        // Sicily: 11.451960,35.958486,16.978083,38.683835
-        // Palermo: 12.594538,37.686469,13.786554,38.271004
-        // East Bay: -122.381408,37.772258,-122.149322,37.919742
     });
 
     // Add Legend widget
