@@ -10,6 +10,9 @@ require([
     // set API key
     esriConfig.apiKey = "AAPKeb82c116636342a289d5172515b76b9d6Wz_Fi24SspiTAlNJq7OihpKOKxxxsU7_0FN8BM8OfEeAzRnknPrfq9hVRTSuyNQ"
 
+    // Global variable to track the currently selected features on the FeatureTable.
+    let currentSelectedOIDs = [];
+
     // Data from BGMAPP
     const url = "https://services9.arcgis.com/q5uyFfTZo3LFL04P/arcgis/rest/services/survey123_0954ef4c3eb74d9989a91330c7740a9f/FeatureServer/0";
 
