@@ -195,4 +195,50 @@ require([
 
     view.ui.add(expand, "top-right");
 
+
+    // Client-side filtering by industry
+    view.whenLayerView(featureLayer).then((layerView) => {
+        const field = "Industry";
+
+        const filterSelect = document.getElementById("filter");
+        // Event fires every time a different option is selected 
+        // from the dropdown
+        filterSelect.addEventListener('input', (event) => {
+            let filterExpression;
+            if (event.target.value === '1=1') {
+                // show all the features
+                filterExpression = event.target.value
+            } else if (event.target.value === "other") {
+                // Show all other features with all other industries not
+                // included in the UniqueValueRenderer.uniqueValueInfos
+                filterExpression = generateOtherSQLString(field);
+            } else {
+                // Filter by the selected industry in the dropdown
+                filterExpression = `${field}='${event.target.value}'`;
+            }
+            // Apply the filter on the client-side layerView.
+            // No request will be sent out to the feature service for this.
+            layerView.filter = {
+                where: filterExpression
+            }
+        });
+    });
+
+    // This function generates a SQL string for all other industries not
+    // included in the UniqueValueRenderer.uniqueValueInfos
+    function generateOtherSQLString(field) {
+        // Loop through each uniqueValueInfos object and create a sql string to 
+        // exclude all of these industries
+        let sqlString = '';
+        uvrRenderer.uniqueValueInfos.forEach(valueInfo => {
+            sqlString += `${field} <> '${valueInfo.value}' AND `;
+        });
+        // cut out the last `AND` string from the final sql string
+        // as the loop above adds one at the end
+        let lastStrIndex = sqlString.lastIndexOf(`AND`);
+        sqlString = sqlString.substr(0, lastStrIndex);
+
+        return sqlString;
+    }
+
 });
